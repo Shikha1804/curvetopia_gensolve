@@ -282,7 +282,7 @@ def get_symmetry():
           os.makedirs(output_directory)
       
       for img, suffix in [(vertical_symmetry, 'vertical'), (horizontal_symmetry, 'horizontal')]:
-          output_path = os.path.join(output_directory, f"{suffix}symmetry{os.path.basename(image_file)}")
+          output_path = os.path.join(output_directory, f"{suffix}_symmetry_{os.path.basename(image_file)}")
           cv2.imwrite(output_path, img)
           
           # Provide download button for processed image
@@ -290,7 +290,7 @@ def get_symmetry():
               st.download_button(
                   label=f"Download {suffix.capitalize()} Symmetry Image",
                   data=file,
-                  file_name=f"{suffix}symmetry{os.path.basename(image_file)}",
+                  file_name=f"{suffix}_symmetry_{os.path.basename(image_file)}",
                   mime="image/png"
               )
           
@@ -310,7 +310,7 @@ def find_symmetry_points(contour):
     for i in range(n):
         for j in range(i+1, n):
             pt1, pt2 = tuple(approx[i][0]), tuple(approx[j][0])
-            dist_to_center = np.abs((pt2[1]-pt1[1])cX - (pt2[0]-pt1[0])*cY + pt2[0]*pt1[1] - pt2[1]*pt1[0]) / np.sqrt((pt2[1]-pt1[1])2 + (pt2[0]-pt1[0])*2)
+            dist_to_center = np.abs((pt2[1]-pt1[1])*cX - (pt2[0]-pt1[0])*cY + pt2[0]*pt1[1] - pt2[1]*pt1[0]) / np.sqrt((pt2[1]-pt1[1])**2 + (pt2[0]-pt1[0])**2)
             if dist_to_center < 5:
                 symmetry_axes.append((pt1, pt2))
 
@@ -330,12 +330,12 @@ def line_intersection(line1_pt1, line1_pt2, line2_pt1, line2_pt2):
     x3, y3 = line2_pt1
     x4, y4 = line2_pt2
 
-    denominator = (x1-x2)(y3-y4) - (y1-y2)(x3-x4)
+    denominator = (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4)
     if denominator == 0:
         return None
 
-    t = ((x1-x3)(y3-y4) - (y1-y3)(x3-x4)) / denominator
-    u = -((x1-x2)(y1-y3) - (y1-y2)(x1-x3)) / denominator
+    t = ((x1-x3)*(y3-y4) - (y1-y3)*(x3-x4)) / denominator
+    u = -((x1-x2)*(y1-y3) - (y1-y2)*(x1-x3)) / denominator
 
     if 0 <= t <= 1 and 0 <= u <= 1:
         x = int(x1 + t*(x2-x1))
@@ -487,5 +487,5 @@ def main():
         
         
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
